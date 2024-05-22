@@ -114,12 +114,11 @@
           </div>
         </div>
         <div class="row">
-        {% for wine_cat in wine_list %}
+        {% for wine_cat, wine_params in wine_list.items() %}
           <div class="col-12 section-title text-center mb-5">
             <h2 class="d-block">{{wine_cat}}</h2>
             <div class="row">
-              {% for wine in wine_parameters %}
-<!--              {% if wine["Категория"]==wine_cat %}  -->
+              {% for wine in wine_params %}
                 <div class="col-lg-4 mb-5 col-md-6">
                   <div class="wine_v_1 text-center pb-4 pt-5">
                   {% if wine["Акция"] %}
@@ -137,7 +136,6 @@
                     </div>
                   </div>
                 </div>
-  <!--              {% endif %}-->
               {% endfor %}
             </div>
           </div>
