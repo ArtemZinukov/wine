@@ -9,8 +9,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 def load_wine_data():
     return (pandas.read_excel('wine3.xlsx', sheet_name="Лист1",
-                           usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
-                           engine='openpyxl')
+                              usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
+                              engine='openpyxl')
             .to_json(orient="records", force_ascii=False))
 
 
@@ -47,12 +47,12 @@ def render_template(wines, wine_list, delta_time):
 
 def main():
     wines = json.loads(load_wine_data())
-    wine_list = defaultdict(list)
+    wine_categories = defaultdict(list)
     for wine in wines:
         wine_category = wine["Категория"]
-        wine_list[wine_category].append(wine)
+        wine_categories[wine_category].append(wine)
 
-    rendered_page = render_template(wines, wine_list, calculate_time_foundation())
+    rendered_page = render_template(wines, wine_categories, calculate_time_foundation())
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
 
