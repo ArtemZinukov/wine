@@ -3,12 +3,13 @@ import json
 from collections import defaultdict
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
+import argparse
 import pandas
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def load_wine_data():
-    return (pandas.read_excel('wine3.xlsx', sheet_name="Лист1",
+def load_wine_data(file):
+    return (pandas.read_excel(file, sheet_name="Лист1",
                               usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
                               engine='openpyxl')
             .to_json(orient="records", force_ascii=False))
@@ -46,7 +47,11 @@ def render_template(wines, wine_list, delta_time):
 
 
 def main():
-    wines = json.loads(load_wine_data())
+    parser = argparse.ArgumentParser(prog='file_name', description='Подгружает файл с винами, на сайт')
+    parser.add_argument('file', nargs='?', default="wine3.xlsx",
+                        help="Введите название файла, для загрузки на сайт", type=str)
+    parser_args = parser.parse_args()
+    wines = json.loads(load_wine_data(parser_args.file))
     wine_categories = defaultdict(list)
     for wine in wines:
         wine_category = wine["Категория"]
