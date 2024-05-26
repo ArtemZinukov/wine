@@ -34,7 +34,7 @@ def get_year_format(year):
     return "лет"
 
 
-def render_template(wines, wine_list, delta_time):
+def render_template(wines, wine_categories, delta_time):
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -43,7 +43,7 @@ def render_template(wines, wine_list, delta_time):
     return template.render(date=delta_time,
                            year=get_year_format(delta_time),
                            wines=wines,
-                           wine_list=wine_list)
+                           wine_categories=wine_categories)
 
 
 def main():
