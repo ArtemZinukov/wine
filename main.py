@@ -1,5 +1,4 @@
 import datetime
-import json
 from collections import defaultdict
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
@@ -12,7 +11,8 @@ def load_wine_data(file):
     return (pandas.read_excel(file, sheet_name="Лист1",
                               usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
                               engine='openpyxl')
-            .to_json(orient="records", force_ascii=False))
+            .to_dict(orient="records"))
+
 
 
 def calculate_time_foundation():
@@ -51,11 +51,11 @@ def main():
     parser.add_argument('file', nargs='?', default="wine3.xlsx",
                         help="Введите название файла, для загрузки на сайт", type=str)
     parser_args = parser.parse_args()
-    wines = json.loads(load_wine_data(parser_args.file))
+    wines = load_wine_data(parser_args.file)
     wine_categories = defaultdict(list)
     for wine in wines:
-        wine_category = wine["Категория"]
-        wine_categories[wine_category].append(wine)
+        category = wine["Категория"]
+        wine_categories[category].append(wine)
 
     rendered_page = render_template(wines, wine_categories, calculate_time_foundation())
     with open('index.html', 'w', encoding="utf8") as file:
